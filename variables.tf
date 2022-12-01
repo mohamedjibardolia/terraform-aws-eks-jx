@@ -4,24 +4,25 @@
 variable "region" {
   description = "The region to create the resources into"
   type        = string
-  default     = "us-east-1"
+  default     = "ap-south-1"
 }
 
 variable "cluster_name" {
   description = "Variable to provide your desired name for the cluster. The script will create a random name if this is empty"
   type        = string
-  default     = ""
+  default     = "jx3-cluster"
 }
 
 variable "profile" {
   description = "The AWS Profile used to provision the EKS Cluster"
   type        = string
-  default     = null
+  default     = "default"
 }
 
 variable "cluster_version" {
   description = "Kubernetes version to use for the EKS cluster."
   type        = string
+  default     = 1.21
 }
 
 // ----------------------------------------------------------------------------
@@ -132,7 +133,7 @@ variable "key_name" {
 variable "volume_type" {
   description = "The volume type to use. Can be standard, gp2 or io1"
   type        = string
-  default     = "gp2"
+  default     = "gp3"
 }
 
 variable "volume_size" {
@@ -152,25 +153,25 @@ variable "iops" {
 variable "vpc_name" {
   description = "The name of the VPC to be created for the cluster"
   type        = string
-  default     = "tf-vpc-eks"
+  default     = "jx3-vpc"
 }
 
 variable "public_subnets" {
   description = "The public subnet CIDR block to use in the created VPC"
   type        = list(string)
-  default     = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+  default     = ["10.220.1.0/24", "10.220.2.0/24", "10.220.3.0/24"]
 }
 
 variable "private_subnets" {
   description = "The private subnet CIDR block to use in the created VPC"
   type        = list(string)
-  default     = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
+  default     = ["10.220.4.0/24", "10.220.5.0/24", "10.220.6.0/24"]
 }
 
 variable "vpc_cidr_block" {
   description = "The vpc CIDR block"
   type        = string
-  default     = "10.0.0.0/16"
+  default     = "10.220.0.0/16"
 }
 
 variable "enable_nat_gateway" {
@@ -335,7 +336,7 @@ variable "s3_kms_arn" {
 }
 
 variable "is_jx2" {
-  default     = true
+  default     = false
   type        = bool
   description = "Flag to specify if jx2 related resources need to be created"
 }
@@ -415,13 +416,13 @@ variable "jx_git_operator_values" {
 variable "jx_git_url" {
   description = "URL for the Jenkins X cluster git repository"
   type        = string
-  default     = ""
+  default     = "https://github.com/mohamedjibardolia/jx3-eks-vault.git"
 }
 
 variable "jx_bot_username" {
   description = "Bot username used to interact with the Jenkins X cluster git repository"
   type        = string
-  default     = ""
+  default     = "jx3-bot-poc"
 }
 
 variable "jx_bot_token" {
@@ -433,7 +434,7 @@ variable "jx_bot_token" {
 variable "create_eks" {
   description = "Controls if EKS cluster and associated resources should be created or not. If you have an existing eks cluster for jx, set it to false"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "create_vpc" {
@@ -589,6 +590,12 @@ variable "local-exec-interpreter" {
   default     = ["/bin/bash", "-c"]
 }
 
+variable "nginx_chart_version" {
+  type        = string
+  description = "nginx chart version"
+  default     = "3.12.0"
+}
+
 // ----------------------------------------------------------------------------
 //  Customer's Certificates
 // ----------------------------------------------------------------------------
@@ -607,7 +614,7 @@ variable "tls_cert" {
 variable "create_nginx" {
   default     = false
   type        = bool
-  description = "Decides whether we want to create nginx resources using terraform or not"
+  description = "Decides whether we want to create  resources using terraform or not"
 }
 
 variable "nginx_release_name" {
@@ -625,6 +632,7 @@ variable "nginx_namespace" {
 variable "nginx_chart_version" {
   type        = string
   description = "nginx chart version"
+  default     = "3.12.0"
 }
 
 variable "create_nginx_namespace" {
